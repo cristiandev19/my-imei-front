@@ -1,6 +1,9 @@
-import { Container, Grid, makeStyles, TextField } from '@material-ui/core'
-import React from 'react'
+import { Button, Container, Grid, makeStyles, TextField } from '@material-ui/core'
+import React, { useEffect, useState } from 'react'
 import { CardIMEI } from '../CardIMEI/CardIMEI'
+import { getImeisByPersona } from '../../service/imei.service';
+import { useForm } from '../../hooks/useForm';
+import { AddImeiModal } from '../AddImeiModal/AddImeiModal';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,7 +22,8 @@ const useStyles = makeStyles((theme) => ({
   },
   buscador: {
     width: '70%',
-    margin: 'auto'
+    margin: '20px auto',
+    display: 'flex'
   },
   main: {
     marginTop: '20px',
@@ -30,30 +34,110 @@ export const Home = () => {
   let spacing = 4;
   const classes = useStyles();
 
-  let array_card = ['item_add',0, 1, 2,3, 66, 6];
+  
+  // let array_card = ['item_add',0, 1, 2,3, 66, 6];
+
+  const [cards, setCards] = useState([]);
+  const [openAddImei, setOpenAddImei] = useState(false);
+  const [form, handleInputChange] = useForm({
+    filtro_imei: ''
+  })
+
+  useEffect(() => {
+    console.log('cambio en form')
+  }, [form]);
+
+  const setDataCards = () => {
+
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const dataImeis = await getImeisByPersona();
+      console.log('dataImeis', dataImeis)
+      setCards(dataImeis.imeis);
+    };
+    fetchData();
+  }, []);
+
+
+  const handleActionsAddImei = ({ type, payload }) => {
+    switch (type) {
+      case 'close':
+        setOpenAddImei(false);
+        break;
+
+      case 'open':
+        setOpenAddImei(true);
+        break;
+
+      case 'register':
+        const { formData } = payload;
+        console.log("🚀 ~ file: Home.js ~ line 76 ~ handleActionsAddImei ~ formData", formData)
+
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  const filterCard = (card) => {
+    if(!form?.filtro_imei.trim()) return true;
+    return card.alias.includes(form?.filtro_imei);
+  }
+
+  const handleOpenAddModal = () => {
+    setOpenAddImei(true);
+  }
+
+
   return (
     <div>
 
       <Container fixed className={classes.main}>
         {/* Hola home */}
-
         <form className={classes.buscador} noValidate autoComplete="off">
-          <TextField id="outlined-basic"  fullWidth label="Outlined" variant="outlined" />
+          <Button 
+            variant="contained" 
+            color="secondary"
+            onClick={handleOpenAddModal}
+          >
+            Agregar
+          </Button>
+          <TextField 
+            fullWidth 
+            variant="outlined" 
+            id="filtro_imei"
+            name="filtro_imei"
+            label="Filtro..."
+            type="text"
+            onChange={ handleInputChange }
+            value={ form.filtro_imei }
+          />
         </form>
         <Grid container className={classes.root} spacing={2}>
           <Grid item xs={12}>
             <Grid container  item xs={12} justify="center" spacing={spacing}>
-              {array_card.map((value) => (
+              {[...cards]
+                .filter(card => filterCard(card))
+                .map(({ id_imei, alias, imei, estado }) => (
 
-                <Grid key={value} item>
+                <Grid key={id_imei} item>
                   {/* <Paper className={classes.paper} /> */}
-                  <CardIMEI key={value} alias="hola" imei="hola" estado="hola"  type_card="value"/>
+                  <CardIMEI key={id_imei} alias={alias} imei={imei} estado={estado} type_card="value"/>
                 </Grid>
               ))}
             </Grid>
           </Grid>
+          { [...cards].filter(card => filterCard(card))?.length === 0 && <h1>No hay registros</h1> }
         </Grid>
       </Container>
+
+      <AddImeiModal
+        openAddImei={ openAddImei }
+        actionsAddImei={ handleActionsAddImei }
+      />
 
     </div>
   )
