@@ -1,10 +1,11 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core'
 import React from 'react'
 import { useForm } from '../../hooks/useForm';
+import { addImei } from '../../service/imei.service';
 
 export const AddImeiModal = ({ openAddImei, actionsAddImei }) => {
 
-  const [formImei, handleInputChange]= useForm({
+  const [formImei, handleInputChange, cleanForm]= useForm({
     alias: '',
     imei: '',
     estado: ''
@@ -17,13 +18,20 @@ export const AddImeiModal = ({ openAddImei, actionsAddImei }) => {
       payload: {}
     })
   }
-  const handleCLickAdd = () => {
+
+  const handleCLickAdd = async () => {
+
+    const result = await addImei(formImei);
+    console.log("🚀 ~ file: AddImeiModal.js ~ line 24 ~ handleCLickAdd ~ result", result)
+
+    const { imei } = result;
     actionsAddImei({
       type: 'register',
       payload: {
-        formData: formImei
+        imeiData: imei
       }
     })
+    cleanForm();
   }
   return (
     <>
