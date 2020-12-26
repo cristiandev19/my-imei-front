@@ -4,6 +4,7 @@ import { CardIMEI } from '../CardIMEI/CardIMEI'
 import { getImeisByPersona } from '../../service/imei.service';
 import { useForm } from '../../hooks/useForm';
 import { AddImeiModal } from '../AddImeiModal/AddImeiModal';
+import { ACTIONS_CARD } from '../../types/card_types';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,9 +73,10 @@ export const Home = () => {
         break;
 
       case 'register':
-        const { formData } = payload;
-        console.log("🚀 ~ file: Home.js ~ line 76 ~ handleActionsAddImei ~ formData", formData)
-
+        const { imeiData } = payload;
+        console.log('quedan', [imeiData, ...cards])
+        setCards([imeiData, ...cards]);
+        setOpenAddImei(false);
         break;
 
       default:
@@ -91,6 +93,15 @@ export const Home = () => {
     setOpenAddImei(true);
   }
 
+  const handleActionCard = ({ type, payload }) => {
+    switch(type) {
+      case ACTIONS_CARD.EDIT_CARD:
+        console.log('hola  ', payload)
+        break;
+      default:
+        break;
+    }
+  }
 
   return (
     <div>
@@ -121,11 +132,18 @@ export const Home = () => {
             <Grid container  item xs={12} justify="center" spacing={spacing}>
               {[...cards]
                 .filter(card => filterCard(card))
-                .map(({ id_imei, alias, imei, estado }) => (
+                .map(({ id, alias, imei, estado }) => (
 
-                <Grid key={id_imei} item>
+                <Grid key={id} item>
                   {/* <Paper className={classes.paper} /> */}
-                  <CardIMEI key={id_imei} alias={alias} imei={imei} estado={estado} type_card="value"/>
+                  <CardIMEI 
+                    key={id} 
+                    alias={alias} 
+                    imei={imei} 
+                    estado={estado} 
+                    type_card="value"
+                    actionCard={ handleActionCard }
+                  />
                 </Grid>
               ))}
             </Grid>
