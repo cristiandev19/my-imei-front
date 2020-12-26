@@ -56,6 +56,13 @@ export const HeaderHome = () => {
     // history
   }
 
+  const clickProfile = () => {
+    console.log('holaaaaaa')
+    // history.replace('/profile')
+
+    history.replace('/profile')
+  }
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -66,7 +73,7 @@ export const HeaderHome = () => {
           <Typography variant="h6" className={classes.title}>
             MyIMEI
           </Typography>
-          <Button edge="end" color="inherit">
+          <Button onClick={ clickProfile } edge="end" color="inherit">
             {/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
               <MenuIcon />
             </IconButton> */}
