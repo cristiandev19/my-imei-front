@@ -2,13 +2,10 @@ import React, { useContext } from 'react';
 import {
   BrowserRouter as Router,
   Switch,
-  Route,
-  Redirect
+  Route
 } from "react-router-dom";
 import { AuthContext } from '../auth/AuthContext';
 import { HandleAuth } from '../components/HandleAuth/HandleAuth';
-// import { HomeRoutes } from './HomeRoutes';
-import { Home } from '../components/Home/Home';
 import { HomeRouter } from './HomeRouter';
 import { PrivateRouter } from './PrivateRouter';
 
