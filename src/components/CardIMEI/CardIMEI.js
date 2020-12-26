@@ -1,5 +1,6 @@
 import { Button, Card, CardActions, CardContent, makeStyles, Typography } from '@material-ui/core';
 import React from 'react'
+import { ACTIONS_CARD } from '../../types/card_types';
 
 
 const useStyles = makeStyles({
@@ -20,8 +21,27 @@ const useStyles = makeStyles({
 });
 
 
-export const CardIMEI = ({ alias, imei, estado, type_card }) => {
+export const CardIMEI = ({ alias, imei, estado, type_card, actionCard }) => {
   const classes = useStyles();
+
+  const handleDelete = () => {
+    // handleDelete
+    actionCard({
+      type: ACTIONS_CARD.DELETE_CARD
+    })
+  }
+
+  const handleEdit = () => {
+    // handleEdit
+    const card_data = { alias, imei, estado }
+    actionCard({
+      type: ACTIONS_CARD.EDIT_CARD,
+      payload: {
+        card_data
+      }
+    })
+  }
+
 
   return (
     <Card className={classes.root}>
@@ -40,8 +60,8 @@ export const CardIMEI = ({ alias, imei, estado, type_card }) => {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Eliminar</Button>
-        <Button size="small">Editar</Button>
+        <Button onClick={ handleDelete } size="small">Eliminar</Button>
+        <Button onClick={ handleEdit } size="small">Editar</Button>
       </CardActions>
     </Card>
   )
