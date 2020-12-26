@@ -13,5 +13,11 @@ export const useForm = (initialState = {}) => {
     });
   };
 
-  return [values, handleInputChange];
+  const cleanForm = () => {
+    setValues({
+      initialState
+    });
+  }
+
+  return [values, handleInputChange, cleanForm];
 }
