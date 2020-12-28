@@ -1,15 +1,21 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@material-ui/core'
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
+import { AuthContext } from '../../auth/AuthContext';
 import { useForm } from '../../hooks/useForm';
 import { addImei } from '../../service/imei.service';
 
-export const AddImeiModal = ({ openAddImei, actionsAddImei }) => {
+export const AddImeiModal = ({ imeiData, openAddImei, actionsAddImei }) => {
+  const { user } = useContext(AuthContext);
 
-  const [formImei, handleInputChange, cleanForm]= useForm({
-    alias: '',
-    imei: '',
-    estado: ''
-  })
+  const [formImei, handleInputChange, cleanForm, setData]= useForm(imeiData)
+  // {
+  //   alias: '',
+  //   imei: '',
+  //   estado: ''
+  // })
+  useEffect(() => {
+    setData(imeiData);
+  }, [imeiData, setData]);
 
 
   const handleCloseAdd = () => {
@@ -21,8 +27,7 @@ export const AddImeiModal = ({ openAddImei, actionsAddImei }) => {
 
   const handleCLickAdd = async () => {
 
-    const result = await addImei(formImei);
-    console.log("🚀 ~ file: AddImeiModal.js ~ line 24 ~ handleCLickAdd ~ result", result)
+    const result = await addImei({ ...formImei, _id_user: user._id_user });
 
     const { imei } = result;
     actionsAddImei({
