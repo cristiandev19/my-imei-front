@@ -8,7 +8,6 @@ export const ProfileForm = ({ user, actionForm }) => {
   const [formProfile, handleInputChange, cleanForm]= useForm({ email, name })
 
   const handleSave = () => {
-    console.log('formProfile',  formProfile)
     actionForm({
       type: 'save',
       payload: {
