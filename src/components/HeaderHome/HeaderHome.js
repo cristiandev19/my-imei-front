@@ -45,9 +45,7 @@ export const HeaderHome = () => {
   };
 
   const handleLogout = () => {
-    console.log('no llega')
     history.replace('/auth')
-    console.log('deberia redireccionar')
 
     dispatch({
       type: types.logout
@@ -57,7 +55,6 @@ export const HeaderHome = () => {
   }
 
   const clickProfile = () => {
-    console.log('holaaaaaa')
     // history.replace('/profile')
 
     history.replace('/profile')
