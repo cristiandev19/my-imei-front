@@ -1,17 +1,17 @@
 import { Button, Container, Grid, makeStyles, TextField } from '@material-ui/core'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { CardIMEI } from '../CardIMEI/CardIMEI'
 import { getImeisByPersona } from '../../service/imei.service';
 import { useForm } from '../../hooks/useForm';
 import { AddImeiModal } from '../AddImeiModal/AddImeiModal';
 import { ACTIONS_CARD } from '../../types/card_types';
+import { AuthContext } from '../../auth/AuthContext';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
     '& > *': {
-      margin: theme.spacing(1),
-      width: '25ch',
+      margin: theme.spacing(1)
     }
   },
   paper: {
@@ -35,27 +35,29 @@ export const Home = () => {
   let spacing = 4;
   const classes = useStyles();
 
-  
+  const { user } = useContext(AuthContext);
+
   // let array_card = ['item_add',0, 1, 2,3, 66, 6];
 
   const [cards, setCards] = useState([]);
   const [openAddImei, setOpenAddImei] = useState(false);
   const [form, handleInputChange] = useForm({
     filtro_imei: ''
+  });
+
+  const [imeiData, setImeiData] = useState({
+    alias: '',
+    imei: '',
+    estado: ''
   })
 
   useEffect(() => {
-    console.log('cambio en form')
   }, [form]);
 
-  const setDataCards = () => {
-
-  }
 
   useEffect(() => {
     const fetchData = async () => {
-      const dataImeis = await getImeisByPersona();
-      console.log('dataImeis', dataImeis)
+      const dataImeis = await getImeisByPersona(user._id_user);
       setCards(dataImeis.imeis);
     };
     fetchData();
@@ -66,15 +68,24 @@ export const Home = () => {
     switch (type) {
       case 'close':
         setOpenAddImei(false);
+        setImeiData({
+          alias: '',
+          imei: '',
+          estado: ''
+        });
         break;
 
       case 'open':
         setOpenAddImei(true);
+        setImeiData({
+          alias: '',
+          imei: '',
+          estado: ''
+        });
         break;
 
       case 'register':
         const { imeiData } = payload;
-        console.log('quedan', [imeiData, ...cards])
         setCards([imeiData, ...cards]);
         setOpenAddImei(false);
         break;
@@ -96,7 +107,9 @@ export const Home = () => {
   const handleActionCard = ({ type, payload }) => {
     switch(type) {
       case ACTIONS_CARD.EDIT_CARD:
-        console.log('hola  ', payload)
+        setImeiData(payload.card_data);
+        setOpenAddImei(true);
+
         break;
       default:
         break;
@@ -107,7 +120,6 @@ export const Home = () => {
     <div>
 
       <Container fixed className={classes.main}>
-        {/* Hola home */}
         <form className={classes.buscador} noValidate autoComplete="off">
           <Button 
             variant="contained" 
@@ -148,13 +160,14 @@ export const Home = () => {
               ))}
             </Grid>
           </Grid>
-          { [...cards].filter(card => filterCard(card))?.length === 0 && <h1>No hay registros</h1> }
+          { [...cards].filter(card => filterCard(card))?.length === 0 && <div className="center">No hay registros</div> }
         </Grid>
       </Container>
 
       <AddImeiModal
         openAddImei={ openAddImei }
         actionsAddImei={ handleActionsAddImei }
+        imeiData={ imeiData }
       />
 
     </div>
