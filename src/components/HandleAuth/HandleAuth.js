@@ -1,6 +1,7 @@
 import { Button, makeStyles } from '@material-ui/core'
 import React, { useContext } from 'react'
 import { AuthContext } from '../../auth/AuthContext';
+import { emailSignUp } from '../../service/auth.service';
 import { types } from '../../types/types';
 import { LoginModal } from '../LoginModal/LoginModal';
 import { RegisterModal } from '../RegisterModal/RegisterModal';
@@ -36,8 +37,7 @@ export const HandleAuth = ({ history }) => {
 
 
 
-  const handleActionsLogin = ({ type, payload }) => {
-    console.log("🚀 ~ file: HandleAuth.js ~ line 52 ~ handleActionsLogin ~ { type, payload }", { type, payload })
+  const handleActionsLogin = async ({ type, payload }) => {
     switch (type) {
       case 'close':
         setOpenLogin(false);
@@ -50,17 +50,19 @@ export const HandleAuth = ({ history }) => {
       case 'login':
         const { formData } = payload;
 
-        const userData = {
-          ...formData,
-          name: 'Cristian'
-        }
+        const userData = {}
+        //   ...formData,
+        //   name: 'Cristian'
+        // }
+
+        // return ;
 
         dispatch({
           type: types.login,
           payload: userData
         });
 
-        history.replace('/home')
+        // history.replace('/home')
         break;
 
       default:
@@ -68,7 +70,7 @@ export const HandleAuth = ({ history }) => {
     }
   }
 
-  const handleActionsRegister = ({ type, payload }) => {
+  const handleActionsRegister = async ({ type, payload }) => {
     switch (type) {
       case 'close':
         setOpenRegister(false);
@@ -80,12 +82,13 @@ export const HandleAuth = ({ history }) => {
 
       case 'register':
         const { formData } = payload;
+        const response = await emailSignUp(formData);
 
         dispatch({
           type: types.login,
-          payload: formData
+          payload: response.user
         });
-
+        setOpenRegister(false);
         history.replace('/home')
         break;
 
