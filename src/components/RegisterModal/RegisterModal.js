@@ -6,23 +6,16 @@ import {
   DialogTitle,
   TextField
 } from '@material-ui/core'
-import React, { useState } from 'react'
+import React from 'react'
+import { useForm } from '../../hooks/useForm';
 
 export const RegisterModal = ({ openRegister, actionsRegister }) => {
 
-  const [registerForm, setRegisterForm] = useState({
+  const [registerForm, handleInputChange] = useForm({
     names: '',
     email: '',
     password: ''
   })
-
-  const handleChangeForm = ({ target }) => {
-    const { name, value } = target;
-    setRegisterForm({
-      ...registerForm,
-      [name] : value
-    });
-  }
 
   const handleCloseRegister = () => {
     actionsRegister({
@@ -57,22 +50,28 @@ export const RegisterModal = ({ openRegister, actionsRegister }) => {
             label="Nombres"
             type="text"
             fullWidth
-            onChange={ handleChangeForm }
+            onChange={ handleInputChange }
             value={ registerForm.names }
           />
           <TextField
             margin="dense"
             id="email"
+            name="email"
             label="Email"
             type="email"
             fullWidth
+            onChange={ handleInputChange }
+            value={ registerForm.email }
           />
           <TextField
             margin="dense"
             id="password"
+            name="password"
             label="Contraseña"
             type="password"
             fullWidth
+            onChange={ handleInputChange }
+            value={ registerForm.password }
           />
         </DialogContent>
         <DialogActions>
