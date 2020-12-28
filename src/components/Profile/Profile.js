@@ -29,10 +29,8 @@ export const Profile = () => {
   const classes = useStyles();
 
   const { user } = useContext(AuthContext);
-  console.log("🚀 ~ file: Profile.js ~ line 32 ~ Profile ~ user", user)
 
   const handleActionForm = (data) => {
-    console.log("🚀 ~ file: Profile.js ~ line 35 ~ actionForm ~ data", data)
 
   }
   return (
