@@ -21,13 +21,16 @@ const useStyles = makeStyles({
 });
 
 
-export const CardIMEI = ({ alias, imei, estado, type_card, actionCard }) => {
+export const CardIMEI = ({ _id, alias, imei, estado, type_card, actionCard }) => {
   const classes = useStyles();
 
   const handleDelete = () => {
     // handleDelete
     actionCard({
-      type: ACTIONS_CARD.DELETE_CARD
+      type: ACTIONS_CARD.DELETE_CARD,
+      payload: {
+        _id_imei: _id
+      }
     })
   }
 
