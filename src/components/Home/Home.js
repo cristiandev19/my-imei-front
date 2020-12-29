@@ -3,9 +3,12 @@ import React, { useContext, useEffect, useState } from 'react'
 import { CardIMEI } from '../CardIMEI/CardIMEI'
 import { getImeisByPersona } from '../../service/imei.service';
 import { useForm } from '../../hooks/useForm';
-import { AddImeiModal } from '../AddImeiModal/AddImeiModal';
 import { ACTIONS_CARD } from '../../types/card_types';
 import { AuthContext } from '../../auth/AuthContext';
+import { ActionsImeiModal } from '../ActionsImeiModal/ActionsImeiModal';
+import { ACTIONS_IMEI } from '../../model/imei.model';
+import { ConfirmModal } from '../ConfirmModal/ConfirmModal';
+import { CONFIRM_ACTIONS } from '../../model/utils.model';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,6 +44,12 @@ export const Home = () => {
 
   const [cards, setCards] = useState([]);
   const [openAddImei, setOpenAddImei] = useState(false);
+  const [openConfirmModal, setOpenConfirmModal] = useState(false);
+  const [infoConfirm, setInfoConfirm] = useState({
+    title: 'Esta seguro de que quiere eliminar este imei?',
+    msj: 'Esta informacion no podra ser recuperada'
+  });
+
   const [form, handleInputChange] = useForm({
     filtro_imei: ''
   });
@@ -50,6 +59,7 @@ export const Home = () => {
     imei: '',
     estado: ''
   })
+  const [typeActionModal, setTypeActionModal] = useState('')
 
   useEffect(() => {
   }, [form]);
@@ -102,6 +112,7 @@ export const Home = () => {
 
   const handleOpenAddModal = () => {
     setOpenAddImei(true);
+    setTypeActionModal(ACTIONS_IMEI.CREATE);
   }
 
   const handleActionCard = ({ type, payload }) => {
@@ -109,7 +120,33 @@ export const Home = () => {
       case ACTIONS_CARD.EDIT_CARD:
         setImeiData(payload.card_data);
         setOpenAddImei(true);
+        setTypeActionModal(ACTIONS_IMEI.UPDATE);
+        break;
+      case ACTIONS_CARD.DELETE_CARD:
+        setOpenConfirmModal(true);
+        setInfoConfirm({
+          ...infoConfirm,
+          _id_imei: payload._id_imei
+        })
+        break;
+      default:
+        break;
+    }
+  }
 
+  const actionsConfirmModal = ({ type, payload }) => {
+    console.log("🚀 ~ file: Home.js ~ line 134 ~ actionsConfirmModal ~ type", type)
+    switch(type) {
+      case CONFIRM_ACTIONS.CONFIRM:
+        setOpenConfirmModal(false);
+        console.log('payload', payload)
+        // (_id_imei)
+
+        break;
+      case CONFIRM_ACTIONS.CANCEL:
+
+
+        setOpenConfirmModal(false);
         break;
       default:
         break;
@@ -141,15 +178,16 @@ export const Home = () => {
         </form>
         <Grid container className={classes.root} spacing={2}>
           <Grid item xs={12}>
-            <Grid container  item xs={12} justify="center" spacing={spacing}>
+            <Grid container item xs={12} justify="center" spacing={spacing}>
               {[...cards]
                 .filter(card => filterCard(card))
-                .map(({ id, alias, imei, estado }) => (
+                .map(({ _id, alias, imei, estado }) => (
 
-                <Grid key={id} item>
+                <Grid key={_id} item>
                   {/* <Paper className={classes.paper} /> */}
                   <CardIMEI 
-                    key={id} 
+                    key={_id} 
+                    _id={_id} 
                     alias={alias} 
                     imei={imei} 
                     estado={estado} 
@@ -164,12 +202,18 @@ export const Home = () => {
         </Grid>
       </Container>
 
-      <AddImeiModal
+      <ActionsImeiModal
         openAddImei={ openAddImei }
         actionsAddImei={ handleActionsAddImei }
         imeiData={ imeiData }
+        typeAction={ typeActionModal }
       />
-
+      <ConfirmModal
+        openConfirmModal={ openConfirmModal }
+        actionsConfirmModal={ actionsConfirmModal }
+        infoConfirm={ infoConfirm }
+      
+      />
     </div>
   )
 }
