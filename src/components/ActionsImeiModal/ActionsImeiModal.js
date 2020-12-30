@@ -2,8 +2,8 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } 
 import React, { useContext, useEffect } from 'react'
 import { AuthContext } from '../../auth/AuthContext';
 import { useForm } from '../../hooks/useForm';
-import { ACTIONS_IMEI } from '../../model/imei.model';
-import { addImei } from '../../service/imei.service';
+import { addImei, updateImei } from '../../service/imei.service';
+import { ACTIONS_IMEI } from '../../types/imei_types';
 
 
 export const ActionsImeiModal = ({ typeAction, imeiData, openAddImei, actionsAddImei }) => {
@@ -42,7 +42,16 @@ export const ActionsImeiModal = ({ typeAction, imeiData, openAddImei, actionsAdd
   }
 
   const handleCLickUpdate = async () => {
+    const result = await updateImei({ ...formImei, id_imei: imeiData.id_imei });
+    console.log("🚀 ~ file: ActionsImeiModal.js ~ line 48 ~ handleCLickUpdate ~ result", result)
 
+    // const { imei } = result;
+    // actionsAddImei({
+    //   type: 'register',
+    //   payload: {
+    //     imeiData: imei
+    //   }
+    // })
     // const result = await addImei({ ...formImei, _id_user: user._id_user });
 
     // const { imei } = result;
