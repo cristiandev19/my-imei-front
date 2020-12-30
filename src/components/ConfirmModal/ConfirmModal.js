@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core'
 import React from 'react'
-import { CONFIRM_ACTIONS } from '../../model/utils.model'
+import { CONFIRM_ACTIONS } from '../../types/utils_types'
 
 export const ConfirmModal = ({ infoConfirm, openConfirmModal, actionsConfirmModal  }) => {
 
@@ -18,7 +18,7 @@ export const ConfirmModal = ({ infoConfirm, openConfirmModal, actionsConfirmModa
       type: CONFIRM_ACTIONS.CONFIRM,
       payload: {
         confirm: true,
-        _id_imei: infoConfirm._id_imei
+        id_imei: infoConfirm.id_imei
       }
     })
   }
