@@ -1,6 +1,7 @@
 import { Container, makeStyles } from '@material-ui/core'
 import React, { useContext } from 'react'
 import { AuthContext } from '../../auth/AuthContext';
+import { PROFILE_ACTIONS } from '../../types/profile_types';
 import { ProfileForm } from '../ProfileForm/ProfileForm';
 
 
@@ -29,9 +30,17 @@ export const Profile = () => {
   const classes = useStyles();
 
   const { user } = useContext(AuthContext);
+  console.log("🚀 ~ file: Profile.js ~ line 32 ~ Profile ~ user", user)
 
-  const handleActionForm = (data) => {
-
+  const handleActionForm = ({ type, payload }) => {
+    switch (type) {
+      case PROFILE_ACTIONS.SAVE:
+        console.warn('payload', payload)
+        break;
+    
+      default:
+        break;
+    }
   }
   return (
     <>
