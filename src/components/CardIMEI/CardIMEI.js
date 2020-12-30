@@ -21,7 +21,7 @@ const useStyles = makeStyles({
 });
 
 
-export const CardIMEI = ({ _id, alias, imei, estado, type_card, actionCard }) => {
+export const CardIMEI = ({ id_imei, alias, imei, estado, type_card, actionCard }) => {
   const classes = useStyles();
 
   const handleDelete = () => {
@@ -29,14 +29,14 @@ export const CardIMEI = ({ _id, alias, imei, estado, type_card, actionCard }) =>
     actionCard({
       type: ACTIONS_CARD.DELETE_CARD,
       payload: {
-        _id_imei: _id
+        id_imei: id_imei
       }
     })
   }
 
   const handleEdit = () => {
     // handleEdit
-    const card_data = { alias, imei, estado }
+    const card_data = { id_imei, alias, imei, estado }
     actionCard({
       type: ACTIONS_CARD.EDIT_CARD,
       payload: {
