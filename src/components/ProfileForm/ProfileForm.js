@@ -1,15 +1,16 @@
 import { Button, TextField } from '@material-ui/core';
 import React from 'react'
 import { useForm } from '../../hooks/useForm';
+import { PROFILE_ACTIONS } from '../../types/profile_types';
 
 export const ProfileForm = ({ user, actionForm }) => {
 
-  const { email, name } = user;
-  const [formProfile, handleInputChange, cleanForm]= useForm({ email, name })
+  const { email, names } = user;
+  const [formProfile, handleInputChange, cleanForm]= useForm({ email, names })
 
   const handleSave = () => {
     actionForm({
-      type: 'save',
+      type: PROFILE_ACTIONS.SAVE,
       payload: {
         form: formProfile
       }
@@ -36,13 +37,13 @@ export const ProfileForm = ({ user, actionForm }) => {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
-            name="name"
+            id="names"
+            name="names"
             label="Nombres"
             type="text"
             fullWidth
             onChange={ handleInputChange }
-            value={ formProfile.name }
+            value={ formProfile.names }
           />
         </div>
 
