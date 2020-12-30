@@ -11,8 +11,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { makeStyles } from '@material-ui/core/styles';
 import { Menu, MenuItem } from '@material-ui/core';
 import { AuthContext } from '../../auth/AuthContext';
-import { types } from '../../types/types';
 import { useHistory } from 'react-router-dom';
+import { AUTH_TYPES } from '../../types/auth_types';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -48,10 +48,14 @@ export const HeaderHome = () => {
     history.replace('/auth')
 
     dispatch({
-      type: types.logout
+      type: AUTH_TYPES.logout
     });
 
     // history
+  }
+
+  const handleGoHome = () => {
+    history.replace('/home')
   }
 
   const clickProfile = () => {
@@ -67,7 +71,7 @@ export const HeaderHome = () => {
           {/* <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton> */}
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h6" className={classes.title} onClick={ handleGoHome } >
             MyIMEI
           </Typography>
           <Button onClick={ clickProfile } edge="end" color="inherit">
