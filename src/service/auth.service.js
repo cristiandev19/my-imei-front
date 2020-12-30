@@ -1,9 +1,9 @@
+import { URL_API } from "../models/constants";
 
-const URL = 'http://localhost:3001';
 
 export const emailSignUp = async (emailData) => {
   try {
-    const fetch_data = await fetch(`${URL}/auth/emailSignUp`, {
+    const fetch_data = await fetch(`${URL_API}/auth/emailSignUp`, {
       "method": "POST",
       "headers": {
         "Content-Type": "application/json"
