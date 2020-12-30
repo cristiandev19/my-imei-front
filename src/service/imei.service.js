@@ -1,9 +1,9 @@
+import { URL_API } from "../models/constants";
 
-const URL = 'http://localhost:3001';
 
 export const getImeisByPersona = async (_id_user) => {
   try {
-    const fetch_data = await fetch(`${URL}/imei/imeiByPersona?_id_user=${_id_user}`, {
+    const fetch_data = await fetch(`${URL_API}/imei/imeiByPersona?_id_user=${_id_user}`, {
       "method": "GET",
       "headers": {}
     });
@@ -16,7 +16,7 @@ export const getImeisByPersona = async (_id_user) => {
 
 export const addImei = async (imeiData) => {
   try {
-    const fetch_data = await fetch(`${URL}/imei/addImei`, {
+    const fetch_data = await fetch(`${URL_API}/imei/addImei`, {
       "method": "POST",
       "headers": {
         "Content-Type": "application/json"
@@ -37,9 +37,9 @@ export const addImei = async (imeiData) => {
 
 }
 
-export const deleteImei = async (_id_imei) => {
+export const deleteImei = async (id_imei) => {
   try {
-    const fetch_data = await fetch(`${URL}/imei/deleteImei`, {
+    const fetch_data = await fetch(`${URL_API}/imei/deleteImei`, {
       "method": "DELETE",
       "headers": {
         "Content-Type": "application/json"
@@ -48,7 +48,7 @@ export const deleteImei = async (_id_imei) => {
       //   "cookie": "PHPSESSID=2rjqso2ukk193osc73r8uvmk2p",
       //   "Content-Type": "application/json"
       // },
-      "body": JSON.stringify({ _id_imei })
+      "body": JSON.stringify({ id_imei })
     })
     if(fetch_data.status === 400) {
       throw new Error('fallo');
@@ -60,9 +60,9 @@ export const deleteImei = async (_id_imei) => {
 
 }
 
-export const deletupdateImeieImei = async (imeiData) => {
+export const updateImei = async (imeiData) => {
   try {
-    const fetch_data = await fetch(`${URL}/imei/updateImei`, {
+    const fetch_data = await fetch(`${URL_API}/imei/updateImei`, {
       "method": "PUT",
       "headers": {
         "Content-Type": "application/json"
