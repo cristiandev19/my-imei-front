@@ -1,14 +1,14 @@
 import { Button, Container, Grid, makeStyles, TextField } from '@material-ui/core'
 import React, { useContext, useEffect, useState } from 'react'
 import { CardIMEI } from '../CardIMEI/CardIMEI'
-import { getImeisByPersona } from '../../service/imei.service';
+import { deleteImei, getImeisByPersona } from '../../service/imei.service';
 import { useForm } from '../../hooks/useForm';
 import { ACTIONS_CARD } from '../../types/card_types';
 import { AuthContext } from '../../auth/AuthContext';
 import { ActionsImeiModal } from '../ActionsImeiModal/ActionsImeiModal';
-import { ACTIONS_IMEI } from '../../model/imei.model';
 import { ConfirmModal } from '../ConfirmModal/ConfirmModal';
-import { CONFIRM_ACTIONS } from '../../model/utils.model';
+import { CONFIRM_ACTIONS } from '../../types/utils_types';
+import { ACTIONS_IMEI } from '../../types/imei_types';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -68,6 +68,7 @@ export const Home = () => {
   useEffect(() => {
     const fetchData = async () => {
       const dataImeis = await getImeisByPersona(user._id_user);
+      console.log("🚀 ~ file: Home.js ~ line 71 ~ fetchData ~ dataImeis", dataImeis)
       setCards(dataImeis.imeis);
     };
     fetchData();
@@ -118,6 +119,8 @@ export const Home = () => {
   const handleActionCard = ({ type, payload }) => {
     switch(type) {
       case ACTIONS_CARD.EDIT_CARD:
+        console.log("🚀 ~ file: Home.js ~ line 131 ~ handleActionCard ~ payload", payload)
+
         setImeiData(payload.card_data);
         setOpenAddImei(true);
         setTypeActionModal(ACTIONS_IMEI.UPDATE);
@@ -126,7 +129,7 @@ export const Home = () => {
         setOpenConfirmModal(true);
         setInfoConfirm({
           ...infoConfirm,
-          _id_imei: payload._id_imei
+          id_imei: payload.id_imei
         })
         break;
       default:
@@ -134,13 +137,15 @@ export const Home = () => {
     }
   }
 
-  const actionsConfirmModal = ({ type, payload }) => {
+  const actionsConfirmModal = async ({ type, payload }) => {
     console.log("🚀 ~ file: Home.js ~ line 134 ~ actionsConfirmModal ~ type", type)
     switch(type) {
       case CONFIRM_ACTIONS.CONFIRM:
         setOpenConfirmModal(false);
-        console.log('payload', payload)
-        // (_id_imei)
+        const resDelete = await deleteImei(payload.id_imei);
+        console.log("🚀 ~ file: Home.js ~ line 145 ~ actionsConfirmModal ~ resDelete", resDelete)
+        const new_cards = cards.filter(card => card.id_imei !== payload.id_imei);
+        setCards(new_cards);
 
         break;
       case CONFIRM_ACTIONS.CANCEL:
@@ -158,16 +163,16 @@ export const Home = () => {
 
       <Container fixed className={classes.main}>
         <form className={classes.buscador} noValidate autoComplete="off">
-          <Button 
-            variant="contained" 
+          <Button
+            variant="contained"
             color="secondary"
             onClick={handleOpenAddModal}
           >
             Agregar
           </Button>
-          <TextField 
-            fullWidth 
-            variant="outlined" 
+          <TextField
+            fullWidth
+            variant="outlined"
             id="filtro_imei"
             name="filtro_imei"
             label="Filtro..."
@@ -181,16 +186,16 @@ export const Home = () => {
             <Grid container item xs={12} justify="center" spacing={spacing}>
               {[...cards]
                 .filter(card => filterCard(card))
-                .map(({ _id, alias, imei, estado }) => (
+                .map(({ id_imei, alias, imei, estado }) => (
 
-                <Grid key={_id} item>
+                <Grid key={id_imei} item>
                   {/* <Paper className={classes.paper} /> */}
-                  <CardIMEI 
-                    key={_id} 
-                    _id={_id} 
-                    alias={alias} 
-                    imei={imei} 
-                    estado={estado} 
+                  <CardIMEI
+                    key={id_imei}
+                    id_imei={id_imei}
+                    alias={alias}
+                    imei={imei}
+                    estado={estado}
                     type_card="value"
                     actionCard={ handleActionCard }
                   />
@@ -212,7 +217,7 @@ export const Home = () => {
         openConfirmModal={ openConfirmModal }
         actionsConfirmModal={ actionsConfirmModal }
         infoConfirm={ infoConfirm }
-      
+
       />
     </div>
   )
