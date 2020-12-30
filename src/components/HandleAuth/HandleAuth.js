@@ -2,7 +2,7 @@ import { Button, makeStyles } from '@material-ui/core'
 import React, { useContext } from 'react'
 import { AuthContext } from '../../auth/AuthContext';
 import { emailSignUp } from '../../service/auth.service';
-import { types } from '../../types/types';
+import { AUTH_TYPES } from '../../types/auth_types';
 import { LoginModal } from '../LoginModal/LoginModal';
 import { RegisterModal } from '../RegisterModal/RegisterModal';
 
@@ -58,7 +58,7 @@ export const HandleAuth = ({ history }) => {
         // return ;
 
         dispatch({
-          type: types.login,
+          type: AUTH_TYPES.login,
           payload: userData
         });
 
@@ -85,7 +85,7 @@ export const HandleAuth = ({ history }) => {
         const response = await emailSignUp(formData);
 
         dispatch({
-          type: types.login,
+          type: AUTH_TYPES.login,
           payload: response.user
         });
         setOpenRegister(false);
