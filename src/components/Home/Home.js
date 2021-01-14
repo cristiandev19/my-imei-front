@@ -9,6 +9,8 @@ import { ActionsImeiModal } from '../ActionsImeiModal/ActionsImeiModal';
 import { ConfirmModal } from '../ConfirmModal/ConfirmModal';
 import { CONFIRM_ACTIONS } from '../../types/utils_types';
 import { ACTIONS_IMEI } from '../../types/imei_types';
+import { MySnackbar } from '../../utils/MySnackbar';
+import { SNACKBAR_SEVERITY } from '../../models/utils.model';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,6 +45,7 @@ export const Home = () => {
   // let array_card = ['item_add',0, 1, 2,3, 66, 6];
 
   const [cards, setCards] = useState([]);
+  const [snack, setSnack] = useState(false);
   const [openAddImei, setOpenAddImei] = useState(false);
   const [openConfirmModal, setOpenConfirmModal] = useState(false);
   const [infoConfirm, setInfoConfirm] = useState({
@@ -158,6 +161,9 @@ export const Home = () => {
     }
   }
 
+  const handleActionSnack = () => {
+  }
+
   return (
     <div>
 
@@ -217,7 +223,13 @@ export const Home = () => {
         openConfirmModal={ openConfirmModal }
         actionsConfirmModal={ actionsConfirmModal }
         infoConfirm={ infoConfirm }
+      />
 
+      <MySnackbar
+        msj={'holaaaaaaaa'}
+        open={snack}
+        severity={SNACKBAR_SEVERITY.SUCCESS}
+        actionSnack={handleActionSnack}
       />
     </div>
   )

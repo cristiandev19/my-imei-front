@@ -1,8 +1,10 @@
 import { Button, makeStyles } from '@material-ui/core'
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { AuthContext } from '../../auth/AuthContext';
+import { SNACKBAR_SEVERITY } from '../../models/utils.model';
 import { emailSignUp } from '../../service/auth.service';
 import { AUTH_TYPES } from '../../types/auth_types';
+import { MySnackbar } from '../../utils/MySnackbar';
 import { LoginModal } from '../LoginModal/LoginModal';
 import { RegisterModal } from '../RegisterModal/RegisterModal';
 
@@ -22,8 +24,13 @@ export const HandleAuth = ({ history }) => {
 
   const classes = useStyles();
 
-  const [openLogin, setOpenLogin] = React.useState(false);
-  const [openRegister, setOpenRegister] = React.useState(false);
+  const [openLogin, setOpenLogin] = useState(false);
+  const [openRegister, setOpenRegister] = useState(false);
+  const [snackBar, setSnackBar] = useState({
+    msj: '',
+    open: '',
+    severity: SNACKBAR_SEVERITY.SUCCESS
+  })
 
   const handleClickOpenLogin = () => {
     setOpenLogin(true);
@@ -83,6 +90,16 @@ export const HandleAuth = ({ history }) => {
       case 'register':
         const { formData } = payload;
         const response = await emailSignUp(formData);
+        console.log('🚀 ~ file: HandleAuth.js ~ line 86 ~ handleActionsRegister ~ response', response)
+        if (response.error) {
+          setSnackBar({
+            ...snackBar,
+            open: true,
+            msj: response.message,
+            severity: SNACKBAR_SEVERITY.ERROR
+          });
+          return ;
+        }
 
         dispatch({
           type: AUTH_TYPES.login,
@@ -95,6 +112,13 @@ export const HandleAuth = ({ history }) => {
       default:
         break;
     }
+  }
+
+  const handleActionSnack = () => {
+    setSnackBar({
+      ...snackBar,
+      open: false
+    });
   }
 
   return (
@@ -125,15 +149,21 @@ export const HandleAuth = ({ history }) => {
           onClick={handleClickOpenRegister}
         > Registrarse</Button>
 
-      <LoginModal
-        openLogin={ openLogin }
-        actionsLogin={ handleActionsLogin }
-      />
-      <RegisterModal
-        openRegister={ openRegister }
-        actionsRegister={ handleActionsRegister }
-      />
+        <LoginModal
+          openLogin={ openLogin }
+          actionsLogin={ handleActionsLogin }
+        />
+        <RegisterModal
+          openRegister={ openRegister }
+          actionsRegister={ handleActionsRegister }
+        />
 
+        <MySnackbar
+          msj={ snackBar.msj}
+          open={ snackBar.open}
+          severity={ snackBar.severity}
+          actionSnack={ handleActionSnack }
+        />
       </div>
     </div>
   )
